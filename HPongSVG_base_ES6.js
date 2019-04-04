@@ -44,6 +44,7 @@ var ballRadius = 0;
 var player = null;
 var computer = null;
 const maxAngle = 2;       // maximum ratio between vertical and horizontal ball speed
+const maxServingAngle = 0.5
 var animation = null;   // the timer object that drives the stepper
 const ballSpeedupFactor = 1.15;
 const ballSpeedupAfterReturns = 3;
@@ -110,12 +111,17 @@ class Ball {
     }
 
     reset() {
+        //get a random number between -1 and 1
+        let randomFactor = ((Math.random() * 2) - 1)
+        
         // serve the ball
         this.x = courtWidth / 6;
         this.y = courtHeight / 2;
         this.x_speed = initialBallSpeed;
-        this.y_speed = 0;
+        this.y_speed = this.x_speed * randomFactor;
         this.returns = 0;
+        
+        this.limitAngle(maxServingAngle)
     }
 
     update(cPaddle, pPaddle) {
