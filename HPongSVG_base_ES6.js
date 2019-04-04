@@ -45,6 +45,8 @@ var player = null;
 var computer = null;
 const maxAngle = 2;       // maximum ratio between vertical and horizontal ball speed
 var animation = null;   // the timer object that drives the stepper
+const ballSpeedupFactor = 1.15;
+const ballSpeedupAfterReturns = 3;
 
 function pongStart(width, height, computerId, playerId) {
     pongStop();
@@ -113,6 +115,7 @@ class Ball {
         this.y = courtHeight / 2;
         this.x_speed = initialBallSpeed;
         this.y_speed = 0;
+        this.returns = 0;
     }
 
     update(cPaddle, pPaddle) {
@@ -263,6 +266,13 @@ class Paddle {
 
         // apply the impact of a moving paddle
         ball.y_speed += this.y_speed / 6;
+        
+        // check if ball was hit for the third
+        ball.returns += 1;
+        if(ball.returns % ballSpeedupAfterReturns === 0){
+          ball.x_speed = ball.x_speed * ballSpeedupFactor;
+          ball.y_speed = ball.y_speed * ballSpeedupFactor;
+        }
 
         // restrict the angle of the ball path
         // such that very strong vertical bouncing will be prohibited.
