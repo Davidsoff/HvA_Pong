@@ -1,28 +1,45 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-    <meta charset="UTF-8">
-    <title>Classic Pong</title>
-    <!-- choose here to use ES5 or ES6 JavaScript solution -->
-    <script src="HPongSVG_base_ES6.js"></script>
+  <meta charset="UTF-8">
+  <title>Classic Pong</title>
+  <link href="HPongSVG_base.css" rel="stylesheet" type="text/css">
+  <script src="tonal.min.js" defer></script>
+  <script src="HPongSVG_base_ES6.js" defer></script>
+
 </head>
+
 <body>
-    <h1>Speel hier Classic Pong</h1>
-    Zie ook <a href="http://www.ponggame.org/">http://www.ponggame.org/</a>
+  <h1>Speel hier Classic Pong</h1>
+  Zie ook <a href="http://www.ponggame.org/">http://www.ponggame.org/</a>
 
-    <p><button onclick="pongStart(640, 480,'Chimp', 'Speler')">Start Pong</button>
+  <p>
+    <input type="radio" name="difficulty" id="easy" value="easy" onclick="setEasyMode(true)">Makkelijk</input>
+    <input type="radio" name="difficulty" id="hard" value="hard" checked="checked" onclick="setEasyMode(false)">Moeilijk</input>
+    <button onclick="pongStart(640, 480,'Chimp', 'chimp_score', 'Chimp_won', 'Speler', 'player_score', 'Player_won')">Start Pong</button>
     <button onclick="pongStop()">Stop Pong</button>
-    </p>
-    <svg width="100%" viewBox="0 0 640 480"
-        style="background-color: black">
-        <line x1="320" y1="0" x2="320" y2="480"
-              stroke="white" stroke-width="2" stroke-dasharray="8,8"></line>
-        <rect id="Chimp" height="60" width="10" x="10" y="210" fill="white"></rect>
-        <rect id="Speler" height="60" width="10" x="620" y="210" fill="white"></rect>
-        <circle id="ball" r="6" cx="320" cy="240" fill="white"></circle>
-        Kennelijk ondersteunt je browser geen in-line SVG.
+  </p>
+  <div class="wrapper">
+    <div class="scorebar left">
+      <div id="chimp_score">0</div>
+      <div id="chimp_text">Chimp</div>
+    </div>
+    <svg width="100%" viewBox="0 0 680 480" style="background-image: url(background.jpg)">
+      <line x1="320" y1="0" x2="320" y2="480" stroke="white" stroke-width="2" stroke-dasharray="8,8"></line>
+      <rect id="Chimp" height="60" width="10" x="40" y="210" fill="white"></rect>
+      <rect id="Speler" height="60" width="10" x="660" y="210" fill="white"></rect>
+      <circle id="ball" r="6" cx="320" cy="240" fill="white"></circle>
+      <text fill="white" class="won" id="Chimp_won" x="185" y="100" font-size="20" visibility="hidden"> Chimp won. Congratulations!!!</text>
+      <text fill="white" class="won" id="Player_won" x="185" y="100" font-size="20" visibility="hidden"> Player won. Congratulations!!!</text>
+      Kennelijk ondersteunt je browser geen in-line SVG.
     </svg>
-    <p class="test">Key code tester: <span id="keypressed"></span></p>
+    <div class="scorebar right">
+      <div id="player_score">0</div>
+      <div id="player_text">Speler</div>
+    </div>
+  </div>
+  <p class="test">Key code tester: <span id="keypressed"></span></p>
 </body>
-</html>
 
+</html>

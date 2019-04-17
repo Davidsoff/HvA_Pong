@@ -1,0 +1,54 @@
+body {
+  color: black;
+  font-family: monospace;
+}
+
+button {
+  background-color: black;
+  color: white;
+  font-family: monospace;
+}
+
+.wrapper {
+  display: flex;
+}
+
+.scorebar{
+  background-color: black;
+  width: 50px;
+  height: calc(((100vw - (50px * 2)) * 480)/680);
+  color: white;
+  font-size: 25px;
+  font-weight: bold;
+
+}
+
+.left {
+  border-right: 1px solid white;
+}
+
+.right {
+  border-left: 1px solid white;
+}
+
+svg {
+  width: calc(100vw - (50px * 2));
+}
+
+#chimp_text {
+  margin-top: 40px;
+  transform: rotate(90deg);
+}
+
+#chimp_score {
+  text-align: center;
+}
+
+#player_text {
+  margin-top: 80px;
+  transform: rotate(-90deg);
+}
+
+#player_score {
+  text-align: center;
+}
