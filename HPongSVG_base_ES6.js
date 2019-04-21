@@ -1,12 +1,13 @@
 /**********
  * A classic game of PONG
  * Starter javascript implementation provided by j.a.somers@hva.nl
- *
+ * Extended by: David Soff, 500814225, Groep 1
  */
 
-
- const Note = Tonal.Note;
- const Chord = Tonal.Chord;
+// static import of tone library functions
+// goal 10.1
+const Note = Tonal.Note;
+const Chord = Tonal.Chord;
 
 var isGoing = false;
 
@@ -58,17 +59,31 @@ var serveFactor = 1;
 var isEasyMode = false;
 var isCheatMode = false;
 const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-const toneLength = 0.1;
+const toneLength = 0.2;
 const playerChord = "E4";
 const sideChord = "D4";
 const computerChord = "C4";
 const scoreChord = "C3";
+var toneMode = "CHORD"
 
+// goal 10.1
+function applySelectValueTo(id, callbackFunction){
+  d = document.getElementById(id).value;
+  callbackFunction(d);
+}
+
+//goal 10.1
+function setToneMode(mode){
+  toneMode = mode;
+}
+
+// goal 9
 function setEasyMode(bool){
   isEasyMode = bool;
   pongRender();
 }
 
+//goal 10.2
 function checkCheatMode(){
   for (let key in keysCurrentlyDown) {
     if (key === 'Space') {
@@ -81,7 +96,7 @@ function checkCheatMode(){
 
 function pongStart(width, height, computerId, computerScoreId, computerWonId, playerId, playerScoreId, playerWonId) {
     pongStop();
-
+    // goal 10.1
     audioCtx.resume();
     
 
@@ -102,6 +117,7 @@ function pongStart(width, height, computerId, computerScoreId, computerWonId, pl
 
     // render the initial setup
     pongRender();
+    //goal 6
     hideWinnerAnnouncments();
     // start the stepper with an interval of 12 ms
     animation = setInterval(pongStep, 12);
@@ -120,6 +136,7 @@ function pongStop() {
 function pongUpdate() {
     // update positions of all elements
     player.update();
+    // goal 10.2
     if(!isCheatMode){
       computer.update(ball);
       ball.update(computer, player);
@@ -127,6 +144,7 @@ function pongUpdate() {
 }
 
 function pongRender() {
+    // goal 9
     if(isEasyMode){
       player.height = (courtHeight / 8) * 1.4;
       ball.radius = ballRadius * 2;
@@ -141,16 +159,19 @@ function pongRender() {
 }
 
 function pongStep() {
+    // goal 10.2
     checkCheatMode();
     pongUpdate();
     pongRender();
 }
 
+// goal 6
 function hideWinnerAnnouncments(){
   player.wonMessageElement.setAttribute("visibility", 'hidden');
   computer.wonMessageElement.setAttribute("visibility", 'hidden');
 }
 
+// goal 6
 function announceWinner(playerHasWon){
   pongStop();
   if(playerHasWon){
@@ -160,17 +181,33 @@ function announceWinner(playerHasWon){
   }
 }
 
-/* function that plays a chord.
-* makes use of: https://github.com/danigb/tonal
-*/
+// goal 10.1
 function playSound(chord, length){
-    Chord.notes(chord)
+    let frequencies = Chord.notes(chord)
       .map(Note.freq)
       .map(Math.round)
-      .map( freq => _playSound(freq, length, 'sine'))
-
+      
+    switch (toneMode) {
+      case "TONE":
+        playChord(frequencies.slice(0,1), length, "square")
+        break; 
+      case "CHORD":
+      default:
+        playChord(frequencies, length, "sine");
+        break;     
+    }
 }
 
+/* function that plays a chord.
+* makes use of: https://github.com/danigb/tonal
+* goal 10.1
+*/
+function playChord(frequencies, length, type){
+    frequencies
+      .map( freq => _playSound(freq, length, type))
+}
+
+//goal 10.1
 function _playSound(freq, length, type){
   let oscillator = audioCtx.createOscillator();
   oscillator.frequency.value = freq;
@@ -192,12 +229,15 @@ class Ball {
 
     reset(factor) {
         //get a random number between -1 and 1
+        //goal 3
         let randomFactor = ((Math.random() * 2) - 1)
 
         // serve the ball
         this.x = (courtWidth / 2) + (courtWidth / ( factor * -3 ));
         this.y = courtHeight / 2;
+        // goal 4
         this.x_speed = initialBallSpeed * factor;
+        // goal 3
         this.y_speed = this.x_speed * randomFactor;
         this.returns = 0;
 
@@ -212,21 +252,29 @@ class Ball {
         // check leaving the court at either side
         if (this.x < 0) {
             // ball has left the court at computer side
+            // goal 4
             pPaddle.score += 1
+            // goal 10.1
             playSound(scoreChord, toneLength)
+            //goal 6
             if(pPaddle.score >= 5){
               announceWinner(true);
             }else{
+              //goal 4
               this.reset(-1);
             }
             return;
         } else if (this.x >= courtWidth) {
             // ball has left the court at player side
+            // goal 4
             cPaddle.score += 1
+            //goal 10.1
             playSound(scoreChord, toneLength)
+            // goal 6
             if(cPaddle.score >= 5){
               announceWinner(false);
             }else{
+              // goal 4
               this.reset(1);
             }
             return;
@@ -237,12 +285,14 @@ class Ball {
             this.y = this.radius;
             if (this.y_speed < 0) {
                 this.y_speed = -this.y_speed;
+                //goal 10.1
                 playSound(sideChord, toneLength)
             }
         } else if (this.y + this.radius > courtHeight) {
             this.y = courtHeight - this.radius;
             if (this.y_speed > 0) {
                 this.y_speed = -this.y_speed;
+                //goal 10.1
                 playSound(sideChord, toneLength)
             }
         }
@@ -295,8 +345,6 @@ class Paddle {
         this.domElement = document.getElementById(domElId);
         this.scoreElement = document.getElementById(scoreElId);
         this.wonMessageElement = document.getElementById(wonMessageId);
-        console.dir(wonMessageId);
-        console.dir(this.wonMessageElement);
         // setup its properties
         this.startXPos = xPos;
         this.x = this.startXPos;
@@ -328,7 +376,7 @@ class Paddle {
         this.domElement.setAttribute("y", this.y);
         this.domElement.setAttribute("width", this.width);
         this.domElement.setAttribute("height", this.height);
-        // this.wonMessageElement.setAttribute("visibility", 'hidden');
+        // goal 4
         this.scoreElement.innerText = this.score;
         
     }
@@ -378,25 +426,25 @@ class Paddle {
             // no further action required
             return;
         }
-
+        
+        //goal 10.1
         playSound(freq, toneLength)
         // paddle was hit: reverse the horizontal direction of the ball
         ball.x_speed = -ball.x_speed;
 
-        // paddle has definitely been hit, so no need to check anymore
+        // paddle has definitely been hit, so no need to check anymore 
+        // goal 8
         if(ball.y <= paddleTop + (this.height / 6 )){
             ball.y_speed -= playerPaddleSpeed / 6;
-            console.log("paddle top hit")
         }
         else if(ball.y >= paddleBottom - (this.height / 6 )){
             ball.y_speed += playerPaddleSpeed / 6;
-            console.log("paddle bottom hit")
         }else{
           // apply the impact of a moving paddle
           ball.y_speed += this.y_speed / 6;
-          console.log("paddle middle hit")
         }
-        // check if ball was hit for the third
+        // count number of hits
+        // goal 2
         ball.returns += 1;
         if(ball.returns % ballSpeedupAfterReturns === 0){
           ball.x_speed = ball.x_speed * ballSpeedupFactor;
@@ -424,14 +472,15 @@ class PlayerPaddle extends Paddle {
                 this.move(0, -1 * playerPaddleSpeed);
             } else if (key === 'ArrowDown') {
                 this.move(0, playerPaddleSpeed);
-            } else if (key === 'ArrowRight') {
+            } else if (key === 'ArrowRight') { // goal 7
                 this.move(playerPaddleSpeed, 0)
-            } else if (key === 'ArrowLeft') {
+            } else if (key === 'ArrowLeft') { //goal 7
                 this.move(-1 * playerPaddleSpeed, 0)
             }
         }
     }
-
+    
+    // goal 7
     move(deltaX, deltaY){
       super.move(deltaX, deltaY);
 
@@ -445,6 +494,7 @@ class PlayerPaddle extends Paddle {
     }
 
     checkHit(ball){
+      // goal 7
       if ( ball.x_speed < 0) {
           // the ball is already moving to the left, and away from the paddle
           // no further action required
@@ -469,7 +519,7 @@ class ComputerPaddle extends Paddle {
         let targetYPos = courtHeight / 2;
         if (isComing) {
             // follow the ball
-            targetYPos = ball.y+200;
+            targetYPos = ball.y;
         }
 
         let diff = targetYPos - (this.y + this.height / 2);
@@ -493,5 +543,6 @@ class ComputerPaddle extends Paddle {
     }
 }
 
+// goal 9
 pongStart(640, 480,'Chimp', 'chimp_score', 'Chimp_won', 'Speler', 'player_score', 'Player_won')
 pongStop();

@@ -1,18 +1,23 @@
+/* Author: David Soff, 500814225, Groep 1 */
+
+/* goal 4, 5, 9 */
 body {
   color: black;
   font-family: monospace;
 }
 
+/* goal 9 */
 button {
   background-color: black;
   color: white;
   font-family: monospace;
 }
 
+/* goal 4, 5 */
 .wrapper {
   display: flex;
 }
-
+/* goal 4, 5 */
 .scorebar{
   background-color: black;
   width: 50px;
@@ -23,32 +28,39 @@ button {
 
 }
 
+/* goal 4, 5 */
 .left {
   border-right: 1px solid white;
 }
 
+/* goal 4, 5 */
 .right {
   border-left: 1px solid white;
 }
 
+/* goal 4, 5 */
 svg {
   width: calc(100vw - (50px * 2));
 }
 
+/* goal 5 */
 #chimp_text {
   margin-top: 40px;
   transform: rotate(90deg);
 }
 
+/* goal 4 */
 #chimp_score {
   text-align: center;
 }
 
+/* goal 5 */
 #player_text {
   margin-top: 80px;
   transform: rotate(-90deg);
 }
 
+/* goal 4 */
 #player_score {
   text-align: center;
 }

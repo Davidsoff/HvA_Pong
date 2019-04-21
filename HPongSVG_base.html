@@ -1,3 +1,4 @@
+<!-- Extended by: David Soff, 500814225, Groep 1 -->
 <!DOCTYPE html>
 <html>
 
@@ -5,6 +6,7 @@
   <meta charset="UTF-8">
   <title>Classic Pong</title>
   <link href="HPongSVG_base.css" rel="stylesheet" type="text/css">
+  <!-- goal 10.1 -->
   <script src="tonal.min.js" defer></script>
   <script src="HPongSVG_base_ES6.js" defer></script>
 
@@ -15,21 +17,30 @@
   Zie ook <a href="http://www.ponggame.org/">http://www.ponggame.org/</a>
 
   <p>
+    <!-- goal 9 -->
     <input type="radio" name="difficulty" id="easy" value="easy" onclick="setEasyMode(true)">Makkelijk</input>
     <input type="radio" name="difficulty" id="hard" value="hard" checked="checked" onclick="setEasyMode(false)">Moeilijk</input>
     <button onclick="pongStart(640, 480,'Chimp', 'chimp_score', 'Chimp_won', 'Speler', 'player_score', 'Player_won')">Start Pong</button>
     <button onclick="pongStop()">Stop Pong</button>
+    <!-- goal 10.1 -->
+    <select onchange="applySelectValueTo('toneMode', setToneMode)" id="toneMode">
+      <option value="CHORD">play chords</option>
+      <option value="TONE">play tones</option>
+    </select>
   </p>
   <div class="wrapper">
+    <!-- goal 4,5 -->
     <div class="scorebar left">
       <div id="chimp_score">0</div>
       <div id="chimp_text">Chimp</div>
     </div>
+    <!-- style secion for goal 1 -->
     <svg width="100%" viewBox="0 0 680 480" style="background-image: url(background.jpg)">
       <line x1="320" y1="0" x2="320" y2="480" stroke="white" stroke-width="2" stroke-dasharray="8,8"></line>
       <rect id="Chimp" height="60" width="10" x="40" y="210" fill="white"></rect>
       <rect id="Speler" height="60" width="10" x="660" y="210" fill="white"></rect>
       <circle id="ball" r="6" cx="320" cy="240" fill="white"></circle>
+      <!-- goal 6 -->
       <text fill="white" class="won" id="Chimp_won" x="185" y="100" font-size="20" visibility="hidden"> Chimp won. Congratulations!!!</text>
       <text fill="white" class="won" id="Player_won" x="185" y="100" font-size="20" visibility="hidden"> Player won. Congratulations!!!</text>
       Kennelijk ondersteunt je browser geen in-line SVG.
